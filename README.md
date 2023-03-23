@@ -8,5 +8,5 @@
 ## Screenshots
 
 ![App Screenshot](https://i.postimg.cc/XYjvbLst/scr1.png)
-![App Screenshot](https://i.postimg.cc/7PzhMfCt/scr2.png)
+![App Screenshot](https://i.yapx.ru/VzNHc.png)
 
