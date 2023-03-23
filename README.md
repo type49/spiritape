@@ -16,3 +16,6 @@
 ![App Screenshot](https://i.postimg.cc/XYjvbLst/scr1.png)
 ![App Screenshot](https://imageup.ru/img192/4260576/scr2.jpg)
 
+## Installing
+
+Portable версию можно скачать по [spiritape](https://drive.google.com/file/d/1uLcburhed--bW4pNa1DnbO0S86bUKWyW/view "Google Drive"). 
