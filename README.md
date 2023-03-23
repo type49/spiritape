@@ -3,3 +3,9 @@
 
 # SpiriTape
 [![Typing SVG](https://readme-typing-svg.herokuapp.com/?color=%2336BCF7&lines=Type+your+text...)](https://git.io/typing-svg)
+
+
+## Screenshots
+
+![App Screenshot](https://i.postimg.cc/HxxWykqz/scr1.png)
+![App Screenshot](https://i.postimg.cc/bJByHj8h/scr2.png)
