@@ -18,4 +18,4 @@
 
 ## Installing
 
-Portable версию можно скачать по [spiritape](https://drive.google.com/file/d/1uLcburhed--bW4pNa1DnbO0S86bUKWyW/view "Google Drive"). 
+Portable версию можно скачать по [ссылке](https://drive.google.com/file/d/1uLcburhed--bW4pNa1DnbO0S86bUKWyW/view "Google Drive"). 
