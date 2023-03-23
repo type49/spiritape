@@ -1,9 +1,18 @@
 import os
 import sqlite3
 
+def get_db_path():
+    db_name = 'mydatabase.db'
+    appdata_path = os.path.join(os.getenv('APPDATA'), 'spiritape')
+    db_path = os.path.join(appdata_path, db_name)
+    if not os.path.exists(appdata_path):
+        os.makedirs(appdata_path)
+    return db_path
+
+db_path = get_db_path()
 
 def get_categories(username):
-    with sqlite3.connect("mydatabase.db") as db:
+    with sqlite3.connect(db_path) as db:
         cursor = db.cursor()
         categories = []
         for row in cursor.execute("SELECT rowid, * FROM texts ORDER BY category"):
@@ -14,7 +23,7 @@ def get_categories(username):
 
 
 def get_names(username):
-    with sqlite3.connect("mydatabase.db") as db:
+    with sqlite3.connect(db_path) as db:
         cursor = db.cursor()
         names = []
         for row in cursor.execute("SELECT rowid, * FROM texts ORDER BY name"):
@@ -24,7 +33,7 @@ def get_names(username):
 
 
 def get_users():
-    with sqlite3.connect("mydatabase.db") as db:
+    with sqlite3.connect(db_path) as db:
         cursor = db.cursor()
         users = []
         for row in cursor.execute("SELECT rowid, * FROM users ORDER BY name"):
@@ -34,7 +43,7 @@ def get_users():
 
 
 def check_password(user):
-    with sqlite3.connect("mydatabase.db") as db:
+    with sqlite3.connect(db_path) as db:
         cursor = db.cursor()
         username = user[0]
         password = user[1]

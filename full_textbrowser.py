@@ -10,8 +10,11 @@ from PyQt5.QtSql import QSqlQuery, QSqlDatabase
 from PyQt5.QtWidgets import QWidget, QTextBrowser, QVBoxLayout, QHBoxLayout, QAction, QMainWindow
 import resources_rc
 from sound_zip import get_sound
+from db_foo import get_db_path
 
+db_path = get_db_path()
 sound_tumbler = True
+
 
 def type_sound(sound):
     if sound_tumbler:
@@ -55,12 +58,11 @@ class FullTextBrowser(QMainWindow):
         self.main_text_browser = text[1]
         text = text[0]
 
-        with sqlite3.connect("mydatabase.db") as db:
+        with sqlite3.connect(db_path) as db:
             cursor = db.cursor()
             sql = f"SELECT * FROM texts WHERE name LIKE '{text[1]}'"
             cursor.execute(sql)
             text = (cursor.fetchone())
-
 
         self.setObjectName('main')
         self.resize(750, 650)
@@ -140,7 +142,7 @@ class FullTextBrowser(QMainWindow):
 
     def save_foo(self):
         db = QSqlDatabase.addDatabase('QSQLITE')
-        db.setDatabaseName("mydatabase.db")
+        db.setDatabaseName(db_path)
         db.open()
         query = QSqlQuery()
         query.prepare(f"""

@@ -4,10 +4,11 @@ from PyQt5 import QtWidgets, QtCore
 import sys
 from PyQt5.QtCore import Qt, QEventLoop, QTimer, pyqtSignal
 import db_foo
+from db_foo import get_db_path
 import resources_rc
 
-
-conn = sqlite3.connect("mydatabase.db")
+db_path = get_db_path()
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS users
@@ -136,7 +137,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
             loop.exec()
             wrong_login_label.close()
             return
-        with sqlite3.connect("mydatabase.db") as db:
+        with sqlite3.connect(db_path) as db:
             cursor = db.cursor()
             cursor.execute(f"""INSERT INTO users
                                               VALUES ('{self.login_form.text()}', '{self.password_form.text()}',
