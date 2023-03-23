@@ -2,7 +2,6 @@ import os
 import sqlite3
 import sys
 import threading
-
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, pyqtSignal, QModelIndex, QSize
 from PyQt5.QtGui import QStandardItem, QFont, QColor, QStandardItemModel, QMovie, QIcon
@@ -12,32 +11,17 @@ from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayo
     QMenu, QMessageBox, QDialog
 import pyglet
 import db_foo
-import resources_rc
 from sound_zip import get_sound
+import resources_rc
 
-
-def resource_path(relative_path):
-    try:
-        #base_path = sys._MEIPASS
-        base_path = os.path.abspath(".")
-
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-db_path = resource_path("mydatabase.db")
 sound_tumbler = True
 
-conn = sqlite3.connect(resource_path("mydatabase.db"))
-cursor = conn.cursor()
-
-cursor.execute("""CREATE TABLE IF NOT EXISTS texts
-                  (category TEXT, name TEXT, content Text, author TEXT)
-               """)
-
-conn.commit()
-conn.close()
+with sqlite3.connect('mydatabase.db') as db:
+    cursor = db.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS texts
+                      (category TEXT, name TEXT, content Text, author TEXT)
+                   """)
+    db.commit()
 
 def type_sound(sound):
     if sound_tumbler:
@@ -227,7 +211,7 @@ class CreateNewText(QWidget):
                 QMessageBox.warning(self, "Ошибка ", "Такая тема уже существует. ", QMessageBox.Ok)
                 self.create_new_category()
             else:
-                with sqlite3.connect(resource_path("mydatabase.db")) as db:
+                with sqlite3.connect("mydatabase.db") as db:
                     cursor = db.cursor()
                     cursor.execute(f"""INSERT INTO texts
                                       VALUES ('{text}', '__49__', '', '{self.username}')"""
@@ -278,7 +262,7 @@ class TreeView(QTreeView):
             self.selected_index = self.selected_index[0]
             sound_thread_start(get_sound('deletelist.mp3'))
             categories = []
-            with sqlite3.connect(resource_path("mydatabase.db")) as db:
+            with sqlite3.connect("mydatabase.db") as db:
                 cursor = db.cursor()
                 for row in cursor.execute("SELECT rowid, * FROM texts ORDER BY category"):
                     if row[1] not in categories:
@@ -459,7 +443,7 @@ class MainWindow(QWidget):
         self.root_node = self.tree_model.invisibleRootItem()
 
         for i in db_foo.get_categories(self.username):
-            with sqlite3.connect(resource_path("mydatabase.db")) as db:
+            with sqlite3.connect("mydatabase.db") as db:
                 cursor = db.cursor()
                 sql = f"SELECT * FROM texts WHERE category LIKE '{i}'"
                 cursor.execute(sql)
@@ -506,7 +490,7 @@ class MainWindow(QWidget):
     # noinspection PyShadowingNames
     def text_manager(self, value):
         if value.data() not in db_foo.get_categories(self.username):
-            with sqlite3.connect(resource_path("mydatabase.db")) as db:
+            with sqlite3.connect("mydatabase.db") as db:
                 cursor = db.cursor()
                 sql = f"SELECT * FROM texts WHERE name LIKE '{value.data()}'"
                 cursor.execute(sql)
@@ -576,7 +560,7 @@ class MainWindow(QWidget):
 
     def create_new_text(self, data):
         new_text = [(data[0], data[1], '', self.username), ]
-        with sqlite3.connect(resource_path("mydatabase.db")) as db:
+        with sqlite3.connect("mydatabase.db") as db:
             cursor = db.cursor()
             cursor.executemany("INSERT INTO texts VALUES (?,?,?,?)", new_text)
             db.commit()
@@ -688,7 +672,7 @@ class MainWindow(QWidget):
         textbrowser.setStyleSheet('background-color: #dec7a2')
         textbrowser.setReadOnly(False)
         textbrowser.setEnabled(True)
-        with sqlite3.connect(resource_path("mydatabase.db")) as db:
+        with sqlite3.connect("mydatabase.db") as db:
             cursor = db.cursor()
             cursor.execute(f"SELECT * FROM texts WHERE name LIKE '{text_name}'")
             a = (cursor.fetchone())

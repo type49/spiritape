@@ -11,23 +11,7 @@ from PyQt5.QtWidgets import QWidget, QTextBrowser, QVBoxLayout, QHBoxLayout, QAc
 import resources_rc
 from sound_zip import get_sound
 
-def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
-    try:
-        # Попытка использования пути, если мы работаем в PyInstaller Bundle
-        #base_path = sys._MEIPASS
-        base_path = os.path.abspath(".")
-
-    except Exception:
-        # Иначе, мы работаем в обычном Python окружении
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-# Путь к файлу базы данных внутри скомпилированного исполняемого файла
-db_path = resource_path("mydatabase.db")
 sound_tumbler = True
-
 
 def type_sound(sound):
     if sound_tumbler:
@@ -71,7 +55,7 @@ class FullTextBrowser(QMainWindow):
         self.main_text_browser = text[1]
         text = text[0]
 
-        with sqlite3.connect(resource_path("mydatabase.db")) as db:
+        with sqlite3.connect("mydatabase.db") as db:
             cursor = db.cursor()
             sql = f"SELECT * FROM texts WHERE name LIKE '{text[1]}'"
             cursor.execute(sql)
@@ -156,7 +140,7 @@ class FullTextBrowser(QMainWindow):
 
     def save_foo(self):
         db = QSqlDatabase.addDatabase('QSQLITE')
-        db.setDatabaseName(resource_path("mydatabase.db"))
+        db.setDatabaseName("mydatabase.db")
         db.open()
         query = QSqlQuery()
         query.prepare(f"""

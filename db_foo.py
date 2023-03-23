@@ -2,27 +2,8 @@ import os
 import sqlite3
 
 
-def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
-    try:
-        # Попытка использования пути, если мы работаем в PyInstaller Bundle
-        base_path = os.path.abspath(".")
-        #base_path = sys._MEIPASS
-    except Exception:
-        # Иначе, мы работаем в обычном Python окружении
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-# Путь к файлу базы данных внутри скомпилированного исполняемого файла
-db_path = resource_path("mydatabase.db")
-
-
-
-
-
 def get_categories(username):
-    with sqlite3.connect(resource_path("mydatabase.db")) as db:
+    with sqlite3.connect("mydatabase.db") as db:
         cursor = db.cursor()
         categories = []
         for row in cursor.execute("SELECT rowid, * FROM texts ORDER BY category"):
@@ -33,7 +14,7 @@ def get_categories(username):
 
 
 def get_names(username):
-    with sqlite3.connect(resource_path("mydatabase.db")) as db:
+    with sqlite3.connect("mydatabase.db") as db:
         cursor = db.cursor()
         names = []
         for row in cursor.execute("SELECT rowid, * FROM texts ORDER BY name"):
@@ -43,7 +24,7 @@ def get_names(username):
 
 
 def get_users():
-    with sqlite3.connect(resource_path("mydatabase.db")) as db:
+    with sqlite3.connect("mydatabase.db") as db:
         cursor = db.cursor()
         users = []
         for row in cursor.execute("SELECT rowid, * FROM users ORDER BY name"):
@@ -53,7 +34,7 @@ def get_users():
 
 
 def check_password(user):
-    with sqlite3.connect(resource_path("mydatabase.db")) as db:
+    with sqlite3.connect("mydatabase.db") as db:
         cursor = db.cursor()
         username = user[0]
         password = user[1]
