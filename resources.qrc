@@ -1,0 +1,37 @@
+  <RCC>
+    <qresource prefix="/png">
+      <file>rs/drop_arrow.png</file>
+      <file>rs/icon.png</file>
+      <file>rs/background.png</file>
+      <file>rs/bold.png</file>
+      <file>rs/center_icon.png</file>
+      <file>rs/close_icon.png</file>
+      <file>rs/drop_arrow.png</file>
+      <file>rs/font.png</file>
+      <file>rs/italic.png</file>
+      <file>rs/lines_icon.png</file>
+      <file>rs/overline_icon.png</file>
+      <file>rs/right_icon.png</file>
+      <file>rs/save_icon.png</file>
+      <file>rs/sound_off_icon.png</file>
+      <file>rs/sound_on_icon.png</file>
+      <file>rs/underline_icon.png</file>
+
+    </qresource>
+    <qresource prefix="/gif">
+      <file>rs/spiritape.gif</file>
+    </qresource>
+      <qresource prefix="/db">
+      <file>mydatabase.db</file>
+    </qresource>
+    <qresource prefix="/qss">
+      <file>style/style.qss</file>
+    </qresource>
+    <qresource prefix="/sound">
+      <file>rs/backspace.mp3</file>
+      <file>rs/deletelist.mp3</file>
+      <file>rs/newlist.mp3</file>
+      <file>rs/newstring.mp3</file>
+      <file>rs/type.mp3</file>
+    </qresource>
+  </RCC>
