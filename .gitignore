@@ -1,1 +1,4 @@
 /mydatabase.db
+/venv/
+/build/
+/dist/
