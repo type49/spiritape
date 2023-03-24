@@ -116,11 +116,11 @@ class FullTextBrowser(QMainWindow):
         self.addToolBar(fileToolBar)
 
     def _createActions(self):
-        self.save_action = QAction(QIcon(":png/rs/save_icon.png"), "Сохранить", self)
+        self.save_action = QAction(QIcon(":png/rs/save_icon.png"), "Save", self)
         self.save_action.triggered.connect(self.save_foo)
-        self.sound_action = QAction(QIcon(":png/rs/sound_on_icon.png"), "Звук", self)
+        self.sound_action = QAction(QIcon(":png/rs/sound_on_icon.png"), "Sound", self)
         self.sound_action.triggered.connect(self.sound_switch_foo)
-        self.close_action = QAction(QIcon(":png/rs/close_icon.png"), "Закрыть", self)
+        self.close_action = QAction(QIcon(":png/rs/close_icon.png"), "Close", self)
         self.close_action.triggered.connect(self.close_foo)
 
         self.font_action = QAction(QIcon(":png/rs/font.png"), "Обычный текст", self)

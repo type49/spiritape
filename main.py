@@ -1,11 +1,10 @@
-import os
 import sqlite3
 import sys
 import threading
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, pyqtSignal, QModelIndex, QSize
 from PyQt5.QtGui import QStandardItem, QFont, QColor, QStandardItemModel, QMovie, QIcon
-from PyQt5.QtSql import QSqlQuery, QSqlDatabase
+from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, \
     QLineEdit, QDesktopWidget, QTreeView, QTextBrowser, QComboBox, QInputDialog, \
     QMenu, QMessageBox, QDialog
@@ -61,7 +60,6 @@ class LoginEdit(QLineEdit):
 class StandardItem(QStandardItem):
     def __init__(self, txt='', font_size=10, set_bold=False, color=QColor(0, 0, 0)):
         super().__init__()
-        # noinspection SpellCheckingInspection
         fnt = QFont('Segoe UI', font_size)
         fnt.setBold(set_bold)
         self._old_pos = None
@@ -83,18 +81,15 @@ class TextBrowser(QTextBrowser):
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        # noinspection PyUnresolvedReferences
         self.change_selection_item_on_tree_signal.emit(self.value)
 
     def keyPressEvent(self, e):
         if e.modifiers() == Qt.ControlModifier:
             if e.key() == Qt.Key_S:
-                # noinspection PyUnresolvedReferences
                 self.save_text_signal.emit(True)
         if not e.isAutoRepeat():
             if e.key() != Qt.Key_Shift and e.key() != Qt.Key_Control and e.key() != Qt.Key_Alt:
                 if e.key() == Qt.Key_Return:
-                    # noinspection SpellCheckingInspection
                     sound_thread_start(get_sound('newstring.mp3'))
                 if e.key() == Qt.Key_Backspace:
                     sound_thread_start(get_sound('backspace.mp3'))
@@ -108,7 +103,6 @@ class TextBrowser(QTextBrowser):
     def focusOutEvent(self, ev: QtGui.QFocusEvent):
         self.setStyleSheet('background-color: #dec7a2')
 
-    # noinspection PyMethodMayBeStatic
     def save_text_button_click(self, button):
         button.click()
 
@@ -126,7 +120,7 @@ class CreateNewText(QWidget):
         self.setWindowIcon(icon)
         self.setFixedSize(400, 200)
         self.setObjectName('createNewTextWindow')
-        self.setWindowTitle('Создание Нового')
+        self.setWindowTitle('Create The New')
         self.mainLayout = QtWidgets.QVBoxLayout()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -139,7 +133,7 @@ class CreateNewText(QWidget):
         self.categories.setObjectName('newTextCategory')
         self.categories.addItems(db_foo.get_categories(self.username))
 
-        self.add_category_button = QPushButton('Добавить тему')
+        self.add_category_button = QPushButton('Add category')
         self.add_category_button.setObjectName('addCategoryButton')
         self.add_category_button.clicked.connect(self.create_new_category)
         self.add_category_button.setFixedSize(150, 30)
@@ -147,22 +141,22 @@ class CreateNewText(QWidget):
         self.category_layout.addWidget(self.categories)
         self.category_layout.addWidget(self.add_category_button)
 
-        self.cancel_button = QPushButton('Отмена')
+        self.cancel_button = QPushButton('Cancel')
         self.cancel_button.setObjectName('cancelNewTextButton')
         self.cancel_button.clicked.connect(self.cancel)
 
-        self.create_button = QPushButton('Создать')
+        self.create_button = QPushButton('Create')
         self.create_button.setObjectName('createNewTextButton')
         self.create_button.clicked.connect(self.create_new_text)
 
         button_layout = QHBoxLayout()
 
-        name_label = QLabel('Название:')
+        name_label = QLabel('Name:')
         name_label.setObjectName('label')
         name_label.setFixedHeight(20)
         self.mainLayout.addWidget(name_label)
         self.mainLayout.addWidget(self.name_for_new_text_edit)
-        category_label = QLabel('Тема:')
+        category_label = QLabel('Category:')
         category_label.setObjectName('label')
         self.mainLayout.addWidget(category_label)
         self.mainLayout.addLayout(self.category_layout)
@@ -181,20 +175,18 @@ class CreateNewText(QWidget):
             if self.name_for_new_text_edit.text() != self.categories.currentText():
                 print(self.name_for_new_text_edit.text(), self.categories.currentText())
                 new_text_category_and_name = [self.categories.currentText(), self.name_for_new_text_edit.text()]
-                # noinspection PyUnresolvedReferences
                 self.name_and_category_signal.emit(new_text_category_and_name)
-                # noinspection SpellCheckingInspection
                 sound_thread_start(get_sound('newlist.mp3'))
             else:
-                QMessageBox.warning(self, "Ошибка ", "Название текста не должно совпадать с названием категории",
+                QMessageBox.warning(self, "Error ", "The title of the text must not be the same as the title of the category.",
                                     QMessageBox.Ok)
         else:
-            QMessageBox.warning(self, "Ошибка ", "Такое уже есть. Давай оригинальнее. ", QMessageBox.Ok)
+            QMessageBox.warning(self, "Error ", "This already exists. Let's be original. ", QMessageBox.Ok)
             self.name_for_new_text_edit.setText('')
             self.name_for_new_text_edit.setFocus()
 
     def no_users_error_message(self):
-        QMessageBox.warning(self, "Ошибка ", "Пользователь не найден. ", QMessageBox.Ok)
+        QMessageBox.warning(self, "Error ", "User not found. ", QMessageBox.Ok)
 
     def create_new_category(self):
         self.setWindowOpacity(0.5)
@@ -204,14 +196,14 @@ class CreateNewText(QWidget):
                                            Qt.Window |
                                            Qt.CustomizeWindowHint)
         new_category_dialog.setInputMode(QInputDialog.TextInput)
-        new_category_dialog.setLabelText("Название:")
+        new_category_dialog.setLabelText("Name:")
         new_category_dialog.setFixedSize(400, 200)
         ok = new_category_dialog.exec_()
         text = new_category_dialog.textValue()
 
         if ok:
             if text in db_foo.get_categories(self.username):
-                QMessageBox.warning(self, "Ошибка ", "Такая тема уже существует. ", QMessageBox.Ok)
+                QMessageBox.warning(self, "Error ", "This category is already exist. ", QMessageBox.Ok)
                 self.create_new_category()
             else:
                 with sqlite3.connect(db_path) as db:
@@ -225,13 +217,11 @@ class CreateNewText(QWidget):
                 self.categories.addItem(text)
                 self.categories.setCurrentText(text)
                 self.setWindowOpacity(1)
-                # noinspection PyUnresolvedReferences
                 self.new_category_signal.emit(category)
         else:
             self.setWindowOpacity(1)
 
     def cancel(self):
-        # noinspection PyUnresolvedReferences
         self.cancel_signal.emit(True)
 
     def keyPressEvent(self, e):
@@ -249,10 +239,9 @@ class TreeView(QTreeView):
         self.customContextMenuRequested.connect(self.context_menu)
 
         self.item_menu = QMenu(self)
-        action1 = self.item_menu.addAction('   [Стереть]')
+        action1 = self.item_menu.addAction('   [Delete]')
         action1.triggered.connect(self.delete_action)
 
-    # noinspection PyAttributeOutsideInit
     def context_menu(self, pos):
         self.selected_index = self.selectedIndexes()
         global_pos = self.viewport().mapToGlobal(pos)
@@ -278,14 +267,13 @@ class TreeView(QTreeView):
                     sql = f"DELETE FROM texts WHERE category = '{self.selected_index.data()}'"
                     cursor.execute(sql)
                     db.commit()
-            # noinspection PyUnresolvedReferences
             self.delete_item_signal.emit(self.selected_index)
 
         dialog = QDialog()
         dialog.setStyleSheet('background-color: #323030;')
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.setFixedSize(300, 150)
-        label = QtWidgets.QLabel('Вы действительно хотите удалить? \n Восстановление будет невозможно.')
+        label = QtWidgets.QLabel('Are you sure? \n Recovery will be impossible.')
         label.setStyleSheet('color: #CDBEA7; font: 13pt "Segoe UI";')
         label.setParent(dialog)
         label.setAlignment(Qt.AlignCenter)
@@ -310,7 +298,6 @@ class MainWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        # noinspection SpellCheckingInspection
         self.register_success_label = QLabel()
         self.setWindowTitle('[Spiritape]')
         self.setObjectName('main')
@@ -323,7 +310,6 @@ class MainWindow(QWidget):
         self.centering_window()
         self.login_ui()
 
-    # noinspection PyAttributeOutsideInit
     def login_ui(self):
         self.key_switcher = 'login'
         self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
@@ -332,7 +318,6 @@ class MainWindow(QWidget):
 
         self.gif_label = QLabel(self)
         self.gif_label.setGeometry(0, -20, 500, 500)
-        # noinspection SpellCheckingInspection
         self.movie = QMovie(':gif/rs/spiritape.gif')
         self.gif_label.setMovie(self.movie)
         self.movie.start()
@@ -342,14 +327,14 @@ class MainWindow(QWidget):
         self.login_edit.resize(200, 30)
         self.login_edit.move(150, 370)
         self.login_edit.setObjectName('loginEdit')
-        self.login_edit.setPlaceholderText(' ' * 15 + 'Логин')
+        self.login_edit.setPlaceholderText(' ' * 15 + 'Login')
         self.login_edit.setGeometry(150, 370, 200, 30)
 
         self.password_edit = LoginEdit()
         self.password_edit.setEchoMode(QLineEdit.Password)
         self.password_edit.setParent(self)
         self.password_edit.setObjectName('passwordEdit')
-        self.password_edit.setPlaceholderText(' ' * 15 + 'Пароль')
+        self.password_edit.setPlaceholderText(' ' * 15 + 'Password')
         self.password_edit.setGeometry(150, 410, 200, 30)
 
         self.login_button = QPushButton(self)
@@ -358,21 +343,20 @@ class MainWindow(QWidget):
         self.login_button.setGeometry(175, 460, 150, 30)
         self.login_button.clicked.connect(self.enter_foo)
 
-        self.register_button = QtWidgets.QPushButton('[Регистрация]')
+        self.register_button = QtWidgets.QPushButton('[Sign Up]')
         self.register_button.clicked.connect(self.register_window)
         self.register_button.setStyleSheet(
             'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
         self.register_button.setParent(self)
         self.register_button.setGeometry(175, 570, 150, 30)
 
-        self.exit_button = QtWidgets.QPushButton('[Выход]')
+        self.exit_button = QtWidgets.QPushButton('[Exit]')
         self.exit_button.clicked.connect(self.close)
         self.exit_button.setStyleSheet(
             'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
         self.exit_button.setParent(self)
         self.exit_button.setGeometry(175, 550, 150, 30)
 
-    # noinspection PyAttributeOutsideInit
     def enter_foo(self):
         self.wrong_login = QLabel(self)
         self.wrong_login.setObjectName('wrongLoginLabel')
@@ -418,25 +402,21 @@ class MainWindow(QWidget):
             self.login_edit.setFocus()
             self.wrong_login.setAlignment(Qt.AlignCenter)
             self.wrong_login.show()
-            self.wrong_login.setText('Неверные данные')
+            self.wrong_login.setText('Wrong data')
             self.wrong_login.setGeometry(0, 320, 500, 30)
             loop = QEventLoop()
             QTimer.singleShot(1500, loop.quit)
             loop.exec()
             self.wrong_login.close()
 
-    # noinspection PyAttributeOutsideInit,PyShadowingNames,PyTypeChecker
     def main_ui(self):
         self.key_switcher = 'entered'
-        # noinspection SpellCheckingInspection
         self.mainbox = QHBoxLayout()
         self.mainbox.setAlignment(Qt.AlignLeft)
 
-        # noinspection SpellCheckingInspection
         self.treebox = QVBoxLayout()
 
         self.tree_view = TreeView()
-        # noinspection PyUnresolvedReferences
         self.tree_view.delete_item_signal.connect(self.update_tree_view)
         self.tree_view.setObjectName('treeView')
         self.tree_view.setFixedWidth(200)
@@ -464,7 +444,7 @@ class MainWindow(QWidget):
         self.tree_view.setModel(self.tree_model)
         self.tree_view.expandAll()
 
-        new_text_button = QPushButton('Новый текст')
+        new_text_button = QPushButton('New text')
         new_text_button.setObjectName('newTextButton')
         new_text_button.clicked.connect(self.create_window)
 
@@ -490,7 +470,6 @@ class MainWindow(QWidget):
 
         self.setLayout(self.mainbox)
 
-    # noinspection PyShadowingNames
     def text_manager(self, value):
         if value.data() not in db_foo.get_categories(self.username):
             with sqlite3.connect(db_path) as db:
@@ -509,28 +488,19 @@ class MainWindow(QWidget):
                     db.close()
 
             text_browser = TextBrowser(value)
-            # noinspection PyUnresolvedReferences
             text_browser.save_text_signal.connect(save_text)
             text_browser.setObjectName('textBrowser')
-            # noinspection PyUnresolvedReferences
             text_browser.change_selection_item_on_tree_signal.connect(self.set_focus_on_tree)
             text_browser.setReadOnly(False)
             text_browser.setText(text)
 
-            # noinspection SpellCheckingInspection
             buttonlayout = QHBoxLayout()
 
-            # noinspection SpellCheckingInspection
             tbclosebtn = QPushButton('☒')
-            # noinspection SpellCheckingInspection
             tbclosebtn.setObjectName('tbclosebutton')
-            # noinspection SpellCheckingInspection
             tbsavebtn = QPushButton('☑')
-            # noinspection SpellCheckingInspection
             tbsavebtn.setObjectName('tbsavebutton')
-            # noinspection SpellCheckingInspection
             tbopenbtn = QPushButton('☐')
-            # noinspection SpellCheckingInspection
             tbopenbtn.setObjectName('tbopenbutton')
 
             buttonlayout.addWidget(tbopenbtn)
@@ -538,7 +508,6 @@ class MainWindow(QWidget):
             buttonlayout.addWidget(tbclosebtn)
 
             browser_widget = QWidget()
-            # noinspection SpellCheckingInspection
             tblayout = QVBoxLayout(browser_widget)
 
             tblayout.addLayout(buttonlayout)
@@ -549,16 +518,12 @@ class MainWindow(QWidget):
             tbopenbtn.clicked.connect(lambda ch, w=_fullscreen_var: self.fullscreen_textbrowser(w))
             tbsavebtn.clicked.connect(save_text)
 
-    # noinspection PyAttributeOutsideInit
     def create_window(self):
         self.setWindowOpacity(0.7)
         self.creating_new_text_window = CreateNewText(self.username, self)
-        # noinspection PyUnresolvedReferences
         self.creating_new_text_window.cancel_signal.connect(self.cancel_creating)
         self.creating_new_text_window.show()
-        # noinspection PyUnresolvedReferences
         self.creating_new_text_window.name_and_category_signal.connect(self.create_new_text)
-        # noinspection PyUnresolvedReferences
         self.creating_new_text_window.new_category_signal.connect(self.update_tree_view)
 
     def create_new_text(self, data):
@@ -605,18 +570,15 @@ class MainWindow(QWidget):
         if e.key() == QtCore.Qt.Key_Escape and self.key_switcher == 'login':
             self.close()
 
-    # noinspection PyAttributeOutsideInit
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self._old_pos = event.pos()
 
-    # noinspection PyAttributeOutsideInit
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             self._old_pos = None
 
     def mouseMoveEvent(self, event):
-        # noinspection PyBroadException
         try:
             if not self._old_pos:
                 return
@@ -631,14 +593,12 @@ class MainWindow(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # noinspection PyMethodMayBeStatic,PyShadowingNames
     def close_tb(self, w):
         w.deleteLater()
 
     def set_focus_on_tree(self, value):
         self.tree_view.setCurrentIndex(value)
 
-    # noinspection PyMethodMayBeStatic
     def off_sound(self, button):
         global sound_tumbler
         if sound_tumbler:
@@ -701,7 +661,7 @@ class MainWindow(QWidget):
         self.register_success_label.setParent(self)
         self.register_success_label.setAlignment(Qt.AlignCenter)
         self.register_success_label.show()
-        self.register_success_label.setText('Регистрация завершена. Введите Ваши данные.')
+        self.register_success_label.setText('Registration completed. Enter your details.')
         self.register_success_label.setGeometry(0, 320, 500, 35)
 
 
