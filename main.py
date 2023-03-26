@@ -12,6 +12,7 @@ import pyglet
 import db_foo
 from db_foo import get_db_path
 from sound_zip import get_sound
+import register_form
 import resources_rc
 
 sound_tumbler = True
@@ -343,6 +344,13 @@ class MainWindow(QWidget):
         self.login_button.setGeometry(175, 460, 150, 30)
         self.login_button.clicked.connect(self.enter_foo)
 
+        self.forgot_pass_button = QtWidgets.QPushButton('[Forgot password]')
+        self.forgot_pass_button.clicked.connect(self.forgot_password_window)
+        self.forgot_pass_button.setStyleSheet(
+            'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
+        self.forgot_pass_button.setParent(self)
+        self.forgot_pass_button.setGeometry(175, 525, 150, 30)
+
         self.register_button = QtWidgets.QPushButton('[Sign Up]')
         self.register_button.clicked.connect(self.register_window)
         self.register_button.setStyleSheet(
@@ -367,6 +375,8 @@ class MainWindow(QWidget):
             self.register_button.deleteLater()
             self.exit_button.hide()
             self.exit_button.deleteLater()
+            self.forgot_pass_button.hide()
+            self.forgot_pass_button.deleteLater()
             self.login_edit.hide()
             self.login_edit.deleteLater()
             self.password_edit.deleteLater()
@@ -645,7 +655,6 @@ class MainWindow(QWidget):
             textbrowser.setText(text)
 
     def register_window(self):
-        import register_form
         self.key_switcher = 'register'
         self.register_form = register_form.RegisterWindow()
 
@@ -653,6 +662,15 @@ class MainWindow(QWidget):
 
         self.register_form.show()
         self.register_form.register_success_signal.connect(self.register_success)
+
+    def forgot_password_window(self):
+        self.key_switcher = 'forgot_password'
+        self.forgot_password_form = register_form.ForgotPasswordWindow()
+
+        self.forgot_password_form.setParent(self)
+
+        self.forgot_password_form.show()
+        self.forgot_password_form.register_success_signal.connect(self.register_success)
 
     def register_success(self):
         self.key_switcher = 'login'
