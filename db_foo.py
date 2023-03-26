@@ -58,3 +58,20 @@ def check_password(user):
                 pass
         except:
             pass
+
+def check_secret_answer(user):
+    with sqlite3.connect(db_path) as db:
+        cursor = db.cursor()
+        username = user[0]
+        password = user[1]
+        try:
+            sql = f"SELECT answer FROM users WHERE name LIKE '{username}'"
+            cursor.execute(sql)
+            a = (cursor.fetchall())
+            try:
+                if password == a[0][0]:
+                    return True
+            except IndexError:
+                pass
+        except:
+            pass
