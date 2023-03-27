@@ -15,6 +15,8 @@ from sound_zip import get_sound
 import register_form
 import resources_rc
 
+password = 'mysecretpassword'
+
 sound_tumbler = True
 
 db_path = get_db_path()
@@ -174,7 +176,6 @@ class CreateNewText(QWidget):
     def create_new_text(self):
         if self.name_for_new_text_edit.text() not in db_foo.get_names(self.username):
             if self.name_for_new_text_edit.text() != self.categories.currentText():
-                print(self.name_for_new_text_edit.text(), self.categories.currentText())
                 new_text_category_and_name = [self.categories.currentText(), self.name_for_new_text_edit.text()]
                 self.name_and_category_signal.emit(new_text_category_and_name)
                 sound_thread_start(get_sound('newlist.mp3'))
@@ -347,8 +348,6 @@ class MainWindow(QWidget):
         self.login_button.setGeometry(175, 460, 150, 30)
         self.login_button.clicked.connect(self.enter_foo)
 
-
-
         self.register_button = QtWidgets.QPushButton('[Регистрация]')
         self.register_button.clicked.connect(self.register_window)
         self.register_button.setStyleSheet(
@@ -403,10 +402,15 @@ class MainWindow(QWidget):
 
             self.main_ui()
         else:
+            def wrong_label_foo():
+                self.wrong_login.setAlignment(Qt.AlignCenter)
+                self.wrong_login.show()
+                self.wrong_login.setText('Неверные данные')
+                self.wrong_login.setGeometry(0, 320, 500, 30)
+                QTimer.singleShot(1300, self.wrong_login.close)
+
             self.wrong_login_count += 1
-            print(self.wrong_login_count)
             if self.wrong_login_count > 2:
-                print(11)
                 self.forgot_pass_button.clicked.connect(self.forgot_password_window)
                 self.forgot_pass_button.setStyleSheet(
                     'background-color: #323030; border: none; text-decoration: blink; font: 13pt "Segoe UI"; color: #ff294d;')
@@ -418,14 +422,7 @@ class MainWindow(QWidget):
             self.login_edit.setText('')
             self.password_edit.setText('')
             self.login_edit.setFocus()
-            self.wrong_login.setAlignment(Qt.AlignCenter)
-            self.wrong_login.show()
-            self.wrong_login.setText('Неверные данные')
-            self.wrong_login.setGeometry(0, 320, 500, 30)
-            loop = QEventLoop()
-            QTimer.singleShot(700, loop.quit)
-            loop.exec()
-            self.wrong_login.close()
+            wrong_label_foo()
 
     def main_ui(self):
         self.key_switcher = 'entered'
@@ -621,7 +618,6 @@ class MainWindow(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-
     def set_focus_on_tree(self, value):
         self.tree_view.setCurrentIndex(value)
 
@@ -655,7 +651,6 @@ class MainWindow(QWidget):
         query.exec()
 
     def textbrowser_unlock(self, signal_var):
-        print('unlocked')
         text_name = signal_var[1]
         textbrowser = signal_var[0]
         textbrowser.setStyleSheet('background-color: #dec7a2')
@@ -665,9 +660,7 @@ class MainWindow(QWidget):
             cursor = db.cursor()
             cursor.execute(f"SELECT * FROM texts WHERE name LIKE '{text_name}'")
             a = (cursor.fetchone())
-            print(a)
             text = a[2]
-            print(text)
             textbrowser.setText(text)
 
     def register_window(self):

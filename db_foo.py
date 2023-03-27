@@ -38,7 +38,6 @@ def get_users():
         users = []
         for row in cursor.execute("SELECT rowid, * FROM users ORDER BY name"):
             users.append(str(row[2]).lower())
-        print(users)
         return users
 
 

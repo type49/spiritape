@@ -20,6 +20,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users
 conn.commit()
 conn.close()
 
+
 class RegisterWindow(QtWidgets.QMainWindow):
     register_success_signal = pyqtSignal(bool)
     def __init__(self):
@@ -164,7 +165,6 @@ class RegisterWindow(QtWidgets.QMainWindow):
         wrong_login_label.close()
 
 
-
 class ForgotPasswordWindow(QtWidgets.QMainWindow):
     register_success_signal = pyqtSignal(bool)
     def __init__(self):
@@ -226,7 +226,6 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
                     self.fp_login.clear()
                     self.login_entered_foo()
                 else:
-                    print(11)
                     self.enter_login_label.hide()
                     self.fp_login.clear()
                     self.wrong_login_label.setStyleSheet('font-size: 16pt; color: #856939;')
@@ -244,12 +243,10 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
         def check():
             with sqlite3.connect(db_path) as db:
                 cursor = db.cursor()
-                print(self.username)
                 sql = f"SELECT answer FROM users WHERE name LIKE '{self.username}'"
                 cursor.execute(sql)
                 self.question = cursor.fetchone()
 
-                print(self.secret_answer_edit.text(), self.question)
                 if self.question[0].lower() == self.secret_answer_edit.text().lower():
                     self.answer_entered_foo()
                 else:
@@ -299,7 +296,6 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
         self.wrong_question_label.deleteLater()
         with sqlite3.connect(db_path) as db:
             cursor = db.cursor()
-            print(self.username)
             sql = f"SELECT password FROM users WHERE name LIKE '{self.username}'"
             cursor.execute(sql)
             self.question = cursor.fetchone()
