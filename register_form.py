@@ -32,7 +32,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
     def init_ui(self):
         self.login_label = QtWidgets.QLabel(self)
         self.login_label.setAlignment(Qt.AlignCenter)
-        self.login_label.setText(' -- Login -- ')
+        self.login_label.setText(' -- Логин -- ')
         self.login_label.setGeometry(150, 190, 200, 30)
         self.login_form = QtWidgets.QLineEdit(self)
         self.login_form.setAlignment(Qt.AlignCenter)
@@ -40,7 +40,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
 
         self.password_label = QtWidgets.QLabel(self)
         self.password_label.setAlignment(Qt.AlignCenter)
-        self.password_label.setText(' -- Password -- ')
+        self.password_label.setText(' -- Пароль -- ')
         self.password_label.setGeometry(150, 250, 200, 30)
         self.password_form = QtWidgets.QLineEdit(self)
         self.password_form.setAlignment(Qt.AlignCenter)
@@ -48,7 +48,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
 
         self.secret_q__label = QtWidgets.QLabel(self)
         self.secret_q__label.setAlignment(Qt.AlignCenter)
-        self.secret_q__label.setText('Secret question:')
+        self.secret_q__label.setText('Секретный вопрос:')
         self.secret_q__label.setGeometry(150, 340, 200, 30)
         self.secret_q__form = QtWidgets.QLineEdit(self)
         self.secret_q__form.setAlignment(Qt.AlignCenter)
@@ -56,19 +56,19 @@ class RegisterWindow(QtWidgets.QMainWindow):
 
         self.secret_a__label = QtWidgets.QLabel(self)
         self.secret_a__label.setAlignment(Qt.AlignCenter)
-        self.secret_a__label.setText('Secret answer:')
+        self.secret_a__label.setText('Секретный ответ:')
         self.secret_a__label.setGeometry(150, 400, 200, 30)
         self.secret_a__form = QtWidgets.QLineEdit(self)
         self.secret_a__form.setAlignment(Qt.AlignCenter)
         self.secret_a__form.setGeometry(125, 430, 250, 30)
 
 
-        self.register_button = QtWidgets.QPushButton('Create')
+        self.register_button = QtWidgets.QPushButton('Создать')
         self.register_button.setParent(self)
         self.register_button.setGeometry(95, 490, 150, 30)
         self.register_button.clicked.connect(self.create_user)
 
-        self.cancel_button = QtWidgets.QPushButton('Cancel')
+        self.cancel_button = QtWidgets.QPushButton('Отмена')
         self.cancel_button.clicked.connect(self.close)
         self.cancel_button.setParent(self)
         self.cancel_button.setGeometry(250, 490, 150, 30)
@@ -80,7 +80,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
             wrong_login_label.setParent(self)
             wrong_login_label.setAlignment(Qt.AlignCenter)
             wrong_login_label.show()
-            wrong_login_label.setText('Enter login')
+            wrong_login_label.setText('Введите логин')
             wrong_login_label.setGeometry(0, 190, 500, 30)
             loop = QEventLoop()
             QTimer.singleShot(1500, loop.quit)
@@ -93,7 +93,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
             wrong_login_label.setParent(self)
             wrong_login_label.setAlignment(Qt.AlignCenter)
             wrong_login_label.show()
-            wrong_login_label.setText('This name is already taken.')
+            wrong_login_label.setText('Это имя уже занято.')
             wrong_login_label.setGeometry(0, 190, 500, 30)
             loop = QEventLoop()
             QTimer.singleShot(1500, loop.quit)
@@ -106,7 +106,7 @@ class RegisterWindow(QtWidgets.QMainWindow):
             wrong_login_label.setParent(self)
             wrong_login_label.setAlignment(Qt.AlignCenter)
             wrong_login_label.show()
-            wrong_login_label.setText('Enter password')
+            wrong_login_label.setText('Введите пароль')
             wrong_login_label.setGeometry(0, 250, 500, 30)
             loop = QEventLoop()
             QTimer.singleShot(1500, loop.quit)
@@ -184,26 +184,26 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
         self.enter_login_label.setParent(self)
         self.enter_login_label.setAlignment(Qt.AlignCenter)
         self.enter_login_label.show()
-        self.enter_login_label.setText('Enter your login')
+        self.enter_login_label.setText('Введите логин')
         self.enter_login_label.setGeometry(0, 300, 500, 30)
 
 
         self.fp_login = QLineEdit()
         self.fp_login.setParent(self)
         self.fp_login.setObjectName('passwordEdit')
-        self.fp_login.setPlaceholderText(' ' * 15 + 'Login')
+        self.fp_login.setPlaceholderText(' ' * 15 + 'Логин')
         self.fp_login.setGeometry(150, 360, 200, 30)
         self.username = self.fp_login.text()
 
 
         self.login_button = QtWidgets.QPushButton(self)
         self.login_button.setObjectName('loginButton')
-        self.login_button.setText('Next')
+        self.login_button.setText('Далее...')
         self.login_button.setGeometry(175, 400, 150, 30)
 
 
 
-        self.back_to_main_button = QtWidgets.QPushButton('[Back]')
+        self.back_to_main_button = QtWidgets.QPushButton('[Выход]')
         self.back_to_main_button.clicked.connect(self.close)
         self.back_to_main_button.setStyleSheet(
             'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
@@ -233,7 +233,7 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
                     self.wrong_login_label.setParent(self)
                     self.wrong_login_label.setAlignment(Qt.AlignCenter)
                     self.wrong_login_label.show()
-                    self.wrong_login_label.setText('Wrong login')
+                    self.wrong_login_label.setText('Неверный логин')
                     self.wrong_login_label.setGeometry(0, 300, 500, 30)
 
         self.login_button.clicked.connect(check)
@@ -259,7 +259,7 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
                     self.wrong_question_label.setParent(self)
                     self.wrong_question_label.setAlignment(Qt.AlignCenter)
                     self.wrong_question_label.show()
-                    self.wrong_question_label.setText('Wrong question')
+                    self.wrong_question_label.setText('Неверный ответ')
                     self.wrong_question_label.setGeometry(0, 300, 500, 30)
 
         self.enter_login_label.hide()
@@ -282,13 +282,14 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
 
         self.secret_answer_edit = QLineEdit()
         self.secret_answer_edit.setParent(self)
-        self.secret_answer_edit.setPlaceholderText(' ' * 4 + 'Enter your answer')
+        self.secret_answer_edit.setStyleSheet('font-size: 13pt;')
+        self.secret_answer_edit.setPlaceholderText(' ' * 4 + 'Ваш ответ:')
         self.secret_answer_edit.setGeometry(150, 360, 200, 30)
         self.secret_answer_edit.show()
 
         self.login_button = QtWidgets.QPushButton(self)
         self.login_button.setObjectName('loginButton')
-        self.login_button.setText('Next')
+        self.login_button.setText('Далее...')
         self.login_button.setGeometry(175, 400, 150, 30)
         self.login_button.show()
         self.login_button.clicked.connect(check)
@@ -314,7 +315,7 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
         self.finish_fp_label.setParent(self)
         self.finish_fp_label.setAlignment(Qt.AlignCenter)
         self.finish_fp_label.show()
-        self.finish_fp_label.setText('Your password:')
+        self.finish_fp_label.setText('Ваш пароль:')
         self.finish_fp_label.setGeometry(0, 300, 500, 30)
 
         self.user_password_edit = QLineEdit()
@@ -325,7 +326,7 @@ class ForgotPasswordWindow(QtWidgets.QMainWindow):
 
         self.back_to_main_button = QtWidgets.QPushButton(self)
         self.back_to_main_button.setObjectName('loginButton')
-        self.back_to_main_button.setText('Back')
+        self.back_to_main_button.setText('Выход')
         self.back_to_main_button.setGeometry(175, 400, 150, 30)
         self.back_to_main_button.show()
         self.back_to_main_button.clicked.connect(self.close)
