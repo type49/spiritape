@@ -505,6 +505,16 @@ class MainWindow(QWidget):
                     db.commit()
                     db.close()
 
+                def close_tb():
+                    save_text()
+                    self.mainbox.removeWidget(browser_widget)
+                    text_browser.deleteLater()
+                    tbclosebtn.deleteLater()
+                    tbsavebtn.deleteLater()
+                    tbopenbtn.deleteLater()
+                    tblayout.deleteLater()
+
+
             text_browser = TextBrowser(value)
             text_browser.save_text_signal.connect(save_text)
             text_browser.setObjectName('textBrowser')
@@ -531,7 +541,7 @@ class MainWindow(QWidget):
             tblayout.addLayout(buttonlayout)
             tblayout.addWidget(text_browser)
             self.mainbox.addWidget(browser_widget, 1)
-            tbclosebtn.clicked.connect(lambda ch, w=browser_widget: self.close_tb(w))
+            tbclosebtn.clicked.connect(close_tb)
             _fullscreen_var = [a, text_browser]
             tbopenbtn.clicked.connect(lambda ch, w=_fullscreen_var: self.fullscreen_textbrowser(w))
             tbsavebtn.clicked.connect(save_text)
@@ -611,8 +621,6 @@ class MainWindow(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    def close_tb(self, w):
-        w.deleteLater()
 
     def set_focus_on_tree(self, value):
         self.tree_view.setCurrentIndex(value)
