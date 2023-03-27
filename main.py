@@ -121,7 +121,7 @@ class CreateNewText(QWidget):
         self.setWindowIcon(icon)
         self.setFixedSize(400, 200)
         self.setObjectName('createNewTextWindow')
-        self.setWindowTitle('Create The New')
+        self.setWindowTitle('Создание Нового')
         self.mainLayout = QtWidgets.QVBoxLayout()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -134,7 +134,7 @@ class CreateNewText(QWidget):
         self.categories.setObjectName('newTextCategory')
         self.categories.addItems(db_foo.get_categories(self.username))
 
-        self.add_category_button = QPushButton('Add category')
+        self.add_category_button = QPushButton('Добавить тему')
         self.add_category_button.setObjectName('addCategoryButton')
         self.add_category_button.clicked.connect(self.create_new_category)
         self.add_category_button.setFixedSize(150, 30)
@@ -142,22 +142,22 @@ class CreateNewText(QWidget):
         self.category_layout.addWidget(self.categories)
         self.category_layout.addWidget(self.add_category_button)
 
-        self.cancel_button = QPushButton('Cancel')
+        self.cancel_button = QPushButton('Отмена')
         self.cancel_button.setObjectName('cancelNewTextButton')
         self.cancel_button.clicked.connect(self.cancel)
 
-        self.create_button = QPushButton('Create')
+        self.create_button = QPushButton('Создать')
         self.create_button.setObjectName('createNewTextButton')
         self.create_button.clicked.connect(self.create_new_text)
 
         button_layout = QHBoxLayout()
 
-        name_label = QLabel('Name:')
+        name_label = QLabel('Название:')
         name_label.setObjectName('label')
         name_label.setFixedHeight(20)
         self.mainLayout.addWidget(name_label)
         self.mainLayout.addWidget(self.name_for_new_text_edit)
-        category_label = QLabel('Category:')
+        category_label = QLabel('Тема:')
         category_label.setObjectName('label')
         self.mainLayout.addWidget(category_label)
         self.mainLayout.addLayout(self.category_layout)
@@ -179,15 +179,15 @@ class CreateNewText(QWidget):
                 self.name_and_category_signal.emit(new_text_category_and_name)
                 sound_thread_start(get_sound('newlist.mp3'))
             else:
-                QMessageBox.warning(self, "Error ", "The title of the text must not be the same as the title of the category.",
+                QMessageBox.warning(self, "Ошибка ", "Название текста не должно совпадать с названием категории.",
                                     QMessageBox.Ok)
         else:
-            QMessageBox.warning(self, "Error ", "This already exists. Let's be original. ", QMessageBox.Ok)
+            QMessageBox.warning(self, "Ошибка ", "Такое уже есть. Давай оригинальнее. ", QMessageBox.Ok)
             self.name_for_new_text_edit.setText('')
             self.name_for_new_text_edit.setFocus()
 
     def no_users_error_message(self):
-        QMessageBox.warning(self, "Error ", "User not found. ", QMessageBox.Ok)
+        QMessageBox.warning(self, "Ошибка ", "Пользователь не найден. ", QMessageBox.Ok)
 
     def create_new_category(self):
         self.setWindowOpacity(0.5)
@@ -204,7 +204,7 @@ class CreateNewText(QWidget):
 
         if ok:
             if text in db_foo.get_categories(self.username):
-                QMessageBox.warning(self, "Error ", "This category is already exist. ", QMessageBox.Ok)
+                QMessageBox.warning(self, "Ошибка ", "Такая тема уже существует. ", QMessageBox.Ok)
                 self.create_new_category()
             else:
                 with sqlite3.connect(db_path) as db:
@@ -240,7 +240,7 @@ class TreeView(QTreeView):
         self.customContextMenuRequested.connect(self.context_menu)
 
         self.item_menu = QMenu(self)
-        action1 = self.item_menu.addAction('   [Delete]')
+        action1 = self.item_menu.addAction('   [Стереть]')
         action1.triggered.connect(self.delete_action)
 
     def context_menu(self, pos):
@@ -274,7 +274,7 @@ class TreeView(QTreeView):
         dialog.setStyleSheet('background-color: #323030;')
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.setFixedSize(300, 150)
-        label = QtWidgets.QLabel('Are you sure? \n Recovery will be impossible.')
+        label = QtWidgets.QLabel('Вы уверены? \n Восстановление будет невозможно.')
         label.setStyleSheet('color: #CDBEA7; font: 13pt "Segoe UI";')
         label.setParent(dialog)
         label.setAlignment(Qt.AlignCenter)
@@ -309,9 +309,12 @@ class MainWindow(QWidget):
         self.setWindowIcon(icon)
 
         self.centering_window()
+        self.forgot_pass_button = QtWidgets.QPushButton('[Забыл пароль]')
+
         self.login_ui()
 
     def login_ui(self):
+        self.wrong_login_count = 0
         self.key_switcher = 'login'
         self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint)
@@ -328,14 +331,14 @@ class MainWindow(QWidget):
         self.login_edit.resize(200, 30)
         self.login_edit.move(150, 370)
         self.login_edit.setObjectName('loginEdit')
-        self.login_edit.setPlaceholderText(' ' * 15 + 'Login')
+        self.login_edit.setPlaceholderText(' ' * 15 + 'Логин')
         self.login_edit.setGeometry(150, 370, 200, 30)
 
         self.password_edit = LoginEdit()
         self.password_edit.setEchoMode(QLineEdit.Password)
         self.password_edit.setParent(self)
         self.password_edit.setObjectName('passwordEdit')
-        self.password_edit.setPlaceholderText(' ' * 15 + 'Password')
+        self.password_edit.setPlaceholderText(' ' * 15 + 'Пароль')
         self.password_edit.setGeometry(150, 410, 200, 30)
 
         self.login_button = QPushButton(self)
@@ -344,21 +347,16 @@ class MainWindow(QWidget):
         self.login_button.setGeometry(175, 460, 150, 30)
         self.login_button.clicked.connect(self.enter_foo)
 
-        self.forgot_pass_button = QtWidgets.QPushButton('[Forgot password]')
-        self.forgot_pass_button.clicked.connect(self.forgot_password_window)
-        self.forgot_pass_button.setStyleSheet(
-            'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
-        self.forgot_pass_button.setParent(self)
-        self.forgot_pass_button.setGeometry(175, 525, 150, 30)
 
-        self.register_button = QtWidgets.QPushButton('[Sign Up]')
+
+        self.register_button = QtWidgets.QPushButton('[Регистрация]')
         self.register_button.clicked.connect(self.register_window)
         self.register_button.setStyleSheet(
             'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
         self.register_button.setParent(self)
         self.register_button.setGeometry(175, 570, 150, 30)
 
-        self.exit_button = QtWidgets.QPushButton('[Exit]')
+        self.exit_button = QtWidgets.QPushButton('[Выход]')
         self.exit_button.clicked.connect(self.close)
         self.exit_button.setStyleSheet(
             'background-color: #323030; border: none; font: 13pt "Segoe UI"; color: #c29548;')
@@ -405,6 +403,16 @@ class MainWindow(QWidget):
 
             self.main_ui()
         else:
+            self.wrong_login_count += 1
+            print(self.wrong_login_count)
+            if self.wrong_login_count > 2:
+                print(11)
+                self.forgot_pass_button.clicked.connect(self.forgot_password_window)
+                self.forgot_pass_button.setStyleSheet(
+                    'background-color: #323030; border: none; text-decoration: blink; font: 13pt "Segoe UI"; color: #ff294d;')
+                self.forgot_pass_button.setParent(self)
+                self.forgot_pass_button.setGeometry(175, 530, 150, 30)
+                self.forgot_pass_button.show()
             self.login_edit.setAlignment(Qt.AlignLeft)
             self.password_edit.setAlignment(Qt.AlignLeft)
             self.login_edit.setText('')
@@ -412,10 +420,10 @@ class MainWindow(QWidget):
             self.login_edit.setFocus()
             self.wrong_login.setAlignment(Qt.AlignCenter)
             self.wrong_login.show()
-            self.wrong_login.setText('Wrong data')
+            self.wrong_login.setText('Неверные данные')
             self.wrong_login.setGeometry(0, 320, 500, 30)
             loop = QEventLoop()
-            QTimer.singleShot(1500, loop.quit)
+            QTimer.singleShot(700, loop.quit)
             loop.exec()
             self.wrong_login.close()
 
@@ -454,7 +462,7 @@ class MainWindow(QWidget):
         self.tree_view.setModel(self.tree_model)
         self.tree_view.expandAll()
 
-        new_text_button = QPushButton('New text')
+        new_text_button = QPushButton('Новый текст')
         new_text_button.setObjectName('newTextButton')
         new_text_button.clicked.connect(self.create_window)
 
@@ -679,7 +687,7 @@ class MainWindow(QWidget):
         self.register_success_label.setParent(self)
         self.register_success_label.setAlignment(Qt.AlignCenter)
         self.register_success_label.show()
-        self.register_success_label.setText('Registration completed. Enter your details.')
+        self.register_success_label.setText('Регистрация завершена. Введите свои данные.')
         self.register_success_label.setGeometry(0, 320, 500, 35)
 
 
